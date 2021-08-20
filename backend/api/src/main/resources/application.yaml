@@ -1,0 +1,9 @@
+app:
+  db:
+    url: jdbc:postgresql://localhost:5432/recipedb?ssl=false
+    username: app_usr
+    password: ${APP_USR_PASS:default}
+    driver-class-name: org.postgresql.Driver
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    default-transaction-timeout-in-seconds: 30
+
