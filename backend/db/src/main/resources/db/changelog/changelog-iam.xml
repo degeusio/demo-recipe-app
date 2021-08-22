@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="iam-changelog-001" author="wouter@degeus.io">
+        <comment>Create table user</comment>
+        <sql>
+            CREATE TABLE iam.user (
+                id                         bigint CONSTRAINT pk_uid PRIMARY KEY NOT NULL,
+                username                   varchar(64) NOT NULL,
+                password                   varchar(255) NOT NULL,
+                pw_enc_meth                varchar(10) NOT NULL,
+                account_expired            boolean NOT NULL,
+                account_locked             boolean NOT NULL,
+                credentials_expired        boolean NOT NULL,
+                account_disabled           boolean NOT NULL
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_002" author="wouter@degeus.io">
+        <comment>Grant select only privilege to 'app_usr' user to IAM.USER,
+            see https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql</comment>
+        <sql>
+            GRANT SELECT ON iam.user TO app_usr;
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_003" author="wouter@degeus.io">
+        <comment>Create sequence for iam.user table</comment>
+        <sql>
+            CREATE SEQUENCE iam.seq_user;
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_004" author="wouter@degeus.io">
+        <comment>Create table iam.user_role</comment>
+        <sql>
+            CREATE TABLE iam.user_role (
+                id                         bigint CONSTRAINT pk_aid PRIMARY KEY NOT NULL,
+                role_name                  varchar(64) NOT NULL
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_005" author="wouter@degeus.io">
+        <comment>Grant select only privilege to app_usr user to iam.user_role</comment>
+        <sql>
+            GRANT SELECT ON iam.user_role TO app_usr;
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_006" author="wouter@degeus.io">
+        <comment>Create sequence for iam.user_role table</comment>
+        <sql>
+            CREATE SEQUENCE iam.seq_user_role;
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_007" author="wouter@degeus.io">
+        <comment>Create table iam.users_roles</comment>
+        <sql>
+            CREATE TABLE iam.users_roles (
+                user_id                         bigint NOT NULL,
+                user_role_id                    bigint NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES iam.user (id) ON DELETE CASCADE,
+                FOREIGN KEY (user_role_id) REFERENCES iam.user_role (id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_008" author="wouter@degeus.io">
+        <comment>Grant select only privilege to app_usr user to iam.users_roles</comment>
+        <sql>
+            GRANT SELECT ON iam.users_roles TO app_usr;
+        </sql>
+    </changeSet>
+
+
+<!-- Below, we insert static data here although this can be made optional -->
+    <changeSet id="iam-changelog-1.0_static-001" author="wouter@degeus.io">
+        <comment>static data - insert authority 'ROLE_ADMINISTRATOR' into the iam.user_role table.</comment>
+        <sql>
+            INSERT INTO iam.user_role(id, role_name)
+            VALUES (NEXTVAL('iam.seq_user_role'),'ROLE_ADMINISTRATOR');
+        </sql>
+    </changeSet>
+    <changeSet id="iam-changelog-1.0_static-002" author="wouter@degeus.io">
+        <comment>insert user 'adminuser' with encrypted password</comment>
+        <sql>
+            INSERT INTO iam.user(id, username, password, account_expired, account_locked, credentials_expired, account_disabled, pw_enc_meth)
+            VALUES (NEXTVAL('iam.seq_user'),'adminuser','{bcrypt}$2a$10$yGAWB3o395p89Cng68ai0OIruhgZiAzfJ8YXSOcYmjhNMNQzJGvWi',FALSE, FALSE, FALSE, FALSE, 'BCRYPT_10');
+        </sql>
+    </changeSet><changeSet id="iam-changelog-1.0_static-003" author="wouter@degeus.io">
+        <comment>Associate user 'adminuser' with role ADMINISTRATOR</comment>
+        <sql>
+            INSERT INTO iam.users_roles (user_id, user_role_id)
+            VALUES (
+                (SELECT id FROM iam.user where username = 'adminuser'),
+                (SELECT id FROM iam.user_role where role_name = 'ROLE_ADMINISTRATOR')
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
+
