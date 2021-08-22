@@ -30,5 +30,7 @@ Feature: Test scenarios for the app.
     And header Accept = 'application/json, text/plain, */*'
     When method GET
     Then status 200
-    * match response == {"id":"#string","title":"Fresh Basil Pesto"}
+    # testing only on snippet of response for now
+    * match response.id == "#string"
+    * match response.title == "Fresh Basil Pesto"
 

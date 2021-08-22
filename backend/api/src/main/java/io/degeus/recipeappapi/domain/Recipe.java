@@ -27,7 +27,7 @@ public class Recipe {
     @Column(nullable = false, updatable = false, unique = true)
     private UUID id;
 
-    @Size(min = 3, max = 64)
+    @Size(min = 3, max = 128)
     @Column(nullable = false, unique = true)
     private String title;
 
@@ -48,7 +48,12 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id")
     )
     @Column(name = "ingredient")
-    private List<String> ingredients;
+    private List<@NotNull @Size(min = 1, max = 128)String> ingredients;
+
+
+    @NotNull
+    @Size(min = 128, max = 2000) // lower and upper limit for amount of ingredients
+    private String instructions;
 
     /** stored in UTC */
     @CreatedDate
