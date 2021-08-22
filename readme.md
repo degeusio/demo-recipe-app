@@ -45,10 +45,12 @@ Using simple base64 authentication for now. We can think of other forms of login
 
 - Security
   - Sensitive operations require authentication (AuthN) and authorization (AuthZ). 
-  - Currently, the app is using a statically added user who has a role of Administrator and a password of 'password'. The password is not stored plain text, but hashed and salted via BCrypt.
+  - Currently, the app is using a statically added user 'adminuser' who has a role of Administrator and a password of 'password'. The password is not stored plain text, but hashed and salted via BCrypt.
   - The user table database is integrated via the 'UserDetails' contract with AuthenticationProvider within the Spring (Security) Framework
   - Authorization is provided through Spring Security's global method security framework, e.g. by using the @PreAuthorize("hasRole('ADMINISTRATOR')") annotation. This is implemented in the service layer of the app, to e.g. allow for further enhancements and integrations with other systems (e.g. messaging systems or reporting systems) or federated authorization solutions relying on OAuth2/OIDC.
-  
+ - For now, authentication is simply implemented using basic authentication. Other means of authentication should be implemented later (forms-based login, SSO, JWTs through OAuth2/OIDC).
+- Of course, this app must be fronted with an SSL-offloading mechanism and only be accessible via httpS. This is handled very conveniently by cloud providers.
+   
 - database
   - least privilege principle is applied through the creation of a specific, low privilege app user
   - in this example, the user that the app uses has no privileges to modify the IAM tables. Even if the app would become compromised, changing that data is prevented. E.g. the 'app_usr' has only select privileges on the iam.* table objects. 
