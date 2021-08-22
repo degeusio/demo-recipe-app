@@ -70,6 +70,17 @@ Feature: Test scenarios for the app.
     * match response.instructions == "Another lorem."
     * match response.ingredients == '#[8] #string'
 
+  Scenario: Scenario-06: For a recipe, an administrator must be able to delete it entirely
+    * print 'Deleting the recipe just created'
+    Given url recipeUrl
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method DELETE
+    Then status 200
+
+    * print 'After deletion, API should return Not Found (404) for the deleted recipe'
+    Given url recipeUrl
+    When method GET
+    Then status 404
 
 
 
