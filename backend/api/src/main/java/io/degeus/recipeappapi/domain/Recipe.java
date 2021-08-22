@@ -52,13 +52,15 @@ public class Recipe {
 
 
     @NotNull
-    @Size(min = 128, max = 2000) // lower and upper limit for amount of ingredients
+    @Size(min = 3, max = 2000) // just some lower and upper limit for amount of ingredients
     private String instructions;
 
     /** stored in UTC */
+    @Column(updatable = false, nullable = false)
     @CreatedDate
     private Instant createdTimestamp;
 
+    @Column(nullable = false)
     @LastModifiedDate
     private Instant lastModifiedTimestamp;
 }

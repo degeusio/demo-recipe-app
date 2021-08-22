@@ -53,4 +53,17 @@ public class RecipeService {
             throw new RuntimeException(ex.getMessage());
         }
     }
+
+    @PreAuthorize("#recipeId.equals(#candidate.id) and isAuthenticated() and hasRole('ADMINISTRATOR')")
+    public Recipe update(UUID recipeId, @Valid Recipe candidate) {
+        try {
+            if (!recipeRepository.existsById(candidate.getId())) {
+                throw new EntityNotFoundException();
+            }
+            return recipeRepository.save(candidate); //full overwrite
+        } catch (Exception ex) {
+            log.error("Error persisting entity. Error:", ex);
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
 }
