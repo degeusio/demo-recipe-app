@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+
 @ConfigurationProperties(prefix = "app")
 @Data
 public class AppProperties {
 
     private DatasourceProperties db;
+    private CorsProperties cors;
 
     @Getter
     @Setter
@@ -21,5 +24,11 @@ public class AppProperties {
         private String driverClassName;
         private String databasePlatform;
         private int defaultTransactionTimeoutInSeconds;
+    }
+
+    @Getter
+    @Setter
+    public static class CorsProperties {
+        private List<String> allowedOrigins;
     }
 }

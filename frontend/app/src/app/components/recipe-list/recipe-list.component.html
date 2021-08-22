@@ -1,0 +1,52 @@
+<div *ngIf="(this.recipes$ | async) as recipes; else loading">
+  <div *ngIf="recipes.length == 0">
+    <p>No recipes found</p>
+  </div>
+  <div *ngIf="recipes.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <span ngbPopover="Incentivizing title">
+              <p>Title</p></span>
+          </th>
+          <th>
+            <span ngbPopover="Is it applicable for vegetarians?">
+              <p>Vegi</p></span>
+          </th>
+          <th>
+            <span ngbPopover="How many servings is it for?">
+              <p>Servings</p></span>
+          </th>
+          <th>
+            <span ngbPopover="Created timestamp">
+              <p>Created</p></span>
+          </th>
+          <th>
+            <span ngbPopover="Timestamp of last modification">
+              <p>Modified</p></span>
+          </th>
+          <th>
+            <span ngbPopover="Refresh" triggers="mouseenter:mouseleave" (click)="refresh()"><a href="javascript:void(0);"><i class="fa fa-refresh" aria-hidden="true"></i></a></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let recipe of recipes">
+          <td>{{ recipe.title}}</td>
+          <td>{{ recipe.vegetarian }}</td>
+          <td>{{ recipe.number_of_persons }}</td>
+          <td>{{ recipe.created_timestamp}}</td>
+          <td>{{ recipe.last_modified_timestamp}}</td>
+<!--          <td><span><a routerLink="{{ 'filings/' + df.id }}">details &raquo;</a></span></td>-->
+          <td><span><a [routerLink]="['./filings', recipe.id]">details &raquo;</a></span></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+</ng-template>

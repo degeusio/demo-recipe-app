@@ -1,0 +1,29 @@
+<!--
+credits to https://stackoverflow.com/questions/46237255/how-to-embed-swagger-ui-into-a-webpage
+checkout github repo and added 2 .js files and 1 css file
+ -->
+<div class="row">
+  <div class="col-sm-offset-2 col-sm-10">
+    <br/>
+    <h3>API documentation</h3>
+    <br/>
+  </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+<div class="row">
+  <div class="col-lg-2">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary btn-sm mb-1" (click)="doLoadSwaggerUi('/v2/api-docs')">Recipe API</button>
+    </div>
+  </div>
+  <div class="row">
+  </div>
+  <div class="col">
+    <div id="swagger-ui"></div>
+  </div>
+</div>
+
+
