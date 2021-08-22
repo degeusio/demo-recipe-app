@@ -33,7 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .httpBasic()
                 .and()
             .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/recipes/**")
+                .antMatchers(HttpMethod.GET,
+                        "/recipes/**",
+                        SwaggerConfig.SWAGGER_V2_API_DOCS_ENDPOINT + "/**",
+                        SwaggerConfig.SWAGGER_V2_UI_ENDPOINT + "/**",
+                        SwaggerConfig.SWAGGER_V2_UI_RESOURCES_ENDPOINT + "/**"
+                )
                 .permitAll()
                 .and()
             .authorizeRequests()
