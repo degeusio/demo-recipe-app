@@ -1,0 +1,16 @@
+body {
+  padding-top: 60px;
+}
+
+@media screen and (max-width: 768px) {
+  body { padding-top: 60px; }
+}
+
+td.rh_sub-total {
+  border-top: 1px solid;
+}
+
+td.rh_grand-total {
+  border-top: 1px solid;
+  border-bottom: double;
+}

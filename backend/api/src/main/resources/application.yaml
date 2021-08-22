@@ -1,4 +1,7 @@
 app:
+  cors:
+    allowed-origins:
+    - http://localhost:4200
   db:
     url: jdbc:postgresql://localhost:5432/recipedb?ssl=false
     username: app_usr

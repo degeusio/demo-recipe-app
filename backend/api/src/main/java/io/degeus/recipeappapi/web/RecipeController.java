@@ -18,7 +18,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.UUID;
 
-@Api(tags = "vat",
+@Api(tags = "Recipe operations",
         description = " " //overrides default name of 'Health Controller' if left empty
 )
 @RestController
@@ -32,7 +32,7 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @ApiOperation("Create a Recipe")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created")})
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = Recipe.class)})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Recipe> create(@ApiParam("The candidate Recipe") @RequestBody Recipe candidate,
                                          @ApiIgnore @ApiParam(hidden = true) UriComponentsBuilder ucb) {
@@ -69,7 +69,7 @@ public class RecipeController {
     }
 
     @ApiOperation("Delete a Recipe")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Void.class)})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @DeleteMapping(value = "/{recipe_id}")
     public ResponseEntity delete(
             @ApiParam("The Recipe's id") @PathVariable("recipe_id") String recipeId) {
