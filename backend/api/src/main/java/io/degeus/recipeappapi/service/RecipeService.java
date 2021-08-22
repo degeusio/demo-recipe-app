@@ -32,6 +32,8 @@ public class RecipeService {
     public Recipe findById(UUID id) throws EntityNotFoundException {
         try {
             return recipeRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        } catch (EntityNotFoundException ex) {
+            throw ex; //rethrow and let it handle by SF to wrap into 404.
         } catch (Exception ex) {
             log.error("Error with persistence layer. Error [{}].", ex.getMessage(), ex);
             throw new RuntimeException(ex.getMessage());
@@ -61,6 +63,19 @@ public class RecipeService {
                 throw new EntityNotFoundException();
             }
             return recipeRepository.save(candidate); //full overwrite
+        } catch (Exception ex) {
+            log.error("Error persisting entity. Error:", ex);
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('ADMINISTRATOR')")
+    public void delete(UUID recipeId) {
+        try {
+            if (!recipeRepository.existsById(recipeId)) {
+                throw new EntityNotFoundException();
+            }
+            recipeRepository.deleteById(recipeId);
         } catch (Exception ex) {
             log.error("Error persisting entity. Error:", ex);
             throw new RuntimeException(ex.getMessage());

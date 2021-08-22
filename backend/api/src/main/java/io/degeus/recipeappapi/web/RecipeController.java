@@ -53,4 +53,10 @@ public class RecipeController {
         return recipeService.update(UUID.fromString(recipeId), candidate);
     }
 
+    @DeleteMapping(value = "/{recipe_id}")
+    public ResponseEntity delete(@PathVariable("recipe_id") String recipeId) {
+        recipeService.delete(UUID.fromString(recipeId));
+        return ResponseEntity.ok().build();
+    }
+
 }
