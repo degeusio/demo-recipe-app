@@ -11,6 +11,14 @@
 
 ### Architecture
 - configuration properties are externalized, see also [the 12-factor app](https://12factor.net/)
+
+- layering & domain modelling
+  - for now kept a simple domain structure consisting of only 3 domain objects:
+    - User: representing a user
+    - UserRole: to account for the roles that a User may have. Now, only one admin user available, but that can be extended easily
+    - Recipe: the Recipe representation itself
+  - Currently, the domain objects serve as web request DTO (through Jackson marshalling), Java POJOs and @Entity's for persistence. For this simple start-up it suffices, but at some point it makes sense to split this up into different Java structures, each for a specific aspect (web integration, domain model and persistence).
+  
   
 - testautomation
   using [Karate test framework](https://github.com/intuit/karate) to test the REST API with Cucumber-like syntax, see e.g. [Bealdung](https://www.baeldung.com/karate-rest-api-testing)

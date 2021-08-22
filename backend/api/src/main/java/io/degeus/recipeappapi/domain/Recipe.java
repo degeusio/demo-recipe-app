@@ -1,5 +1,6 @@
 package io.degeus.recipeappapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @ToString
 public class Recipe {
 
+    public static final String CUSTOM_DATETIME_FORMAT = "dd-MM-yyyy HH:mm";
     @Id
     @org.hibernate.annotations.Type(type = "pg-uuid") // uuid works with PostgreSQL version 8.4-701 above and Hibernate version 4.3.x above, see https://medium.com/@swhp/work-with-uuid-in-jpa-and-postgresql-86a59ea989cd
     @Column(nullable = false, updatable = false, unique = true)
@@ -55,11 +57,12 @@ public class Recipe {
     @Size(min = 3, max = 2000) // just some lower and upper limit for amount of ingredients
     private String instructions;
 
-    /** stored in UTC */
+    @JsonFormat(pattern = CUSTOM_DATETIME_FORMAT, timezone = "UTC") //by default, JavaTimeModule handles this. We are explicitly asked to deviate from ISO8601 format as such, so we do it here
     @Column(updatable = false, nullable = false)
     @CreatedDate
     private Instant createdTimestamp;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "UTC") //by default, JavaTimeModule handles this. We are explicitly asked to deviate from ISO8601 format as such, so we do it here
     @Column(nullable = false)
     @LastModifiedDate
     private Instant lastModifiedTimestamp;
