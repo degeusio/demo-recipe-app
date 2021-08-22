@@ -1,5 +1,10 @@
 # Recipe app
 
+# Run
+
+```shell
+
+```
 ## Backend
 ### Starter of the project
 - Starter of backend api setup created with Spring initializr (https://start.spring.io/), including dependencies:
@@ -49,7 +54,10 @@ Using simple base64 authentication for now. We can think of other forms of login
   - The user table database is integrated via the 'UserDetails' contract with AuthenticationProvider within the Spring (Security) Framework
   - Authorization is provided through Spring Security's global method security framework, e.g. by using the @PreAuthorize("hasRole('ADMINISTRATOR')") annotation. This is implemented in the service layer of the app, to e.g. allow for further enhancements and integrations with other systems (e.g. messaging systems or reporting systems) or federated authorization solutions relying on OAuth2/OIDC.
  - For now, authentication is simply implemented using basic authentication. Other means of authentication should be implemented later (forms-based login, SSO, JWTs through OAuth2/OIDC).
-- Of course, this app must be fronted with an SSL-offloading mechanism and only be accessible via httpS. This is handled very conveniently by cloud providers.
+ - Of course, this app must be fronted with an SSL-offloading mechanism and only be accessible via httpS. This is handled very conveniently by cloud providers.
+ - added specific security related http headers for serving static contents, like e.g.
+   - content-security-policy;
+   - referrer-policy;
    
 - database
   - least privilege principle is applied through the creation of a specific, low privilege app user
