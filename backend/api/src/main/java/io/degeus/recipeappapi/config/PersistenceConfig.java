@@ -1,21 +1,31 @@
 package io.degeus.recipeappapi.config;
 
+import io.degeus.recipeappapi.RecipeAppApiApplication;
+import io.degeus.recipeappapi.repository.UserRepository;
+import io.degeus.recipeappapi.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 
 @Configuration
+@EnableJpaRepositories(
+        basePackageClasses = RecipeAppApiApplication.class,
+        entityManagerFactoryRef = "appEntityManager", //explicitly named, preventing to accidentally using Spring Framework's default
+        transactionManagerRef = "appTransactionManager" //explicitly named, preventing to accidentally using Spring Framework's default
+)
 @RequiredArgsConstructor
 @Slf4j
 public class PersistenceConfig {
@@ -37,7 +47,12 @@ public class PersistenceConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManager() {
+    UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository);
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean appEntityManager() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
 
@@ -60,10 +75,10 @@ public class PersistenceConfig {
      * For production, specifying a timeout out
      */
     @Bean
-    public PlatformTransactionManager iamTransactionManager() {
+    public PlatformTransactionManager appTransactionManager() {
 
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManager().getObject());
+        transactionManager.setEntityManagerFactory(appEntityManager().getObject());
         transactionManager.setDefaultTimeout(appProperties.getDb().getDefaultTransactionTimeoutInSeconds());
         return transactionManager;
     }

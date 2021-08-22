@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="master-changelog-1.0_001" author="wouter@degeus.io">
+        <comment>Revoke all grants from schema 'public', see https://www.postgresql.org/docs/9.5/ddl-schemas.html.</comment>
+        <sql>
+            REVOKE ALL ON SCHEMA public FROM PUBLIC;
+        </sql>
+    </changeSet>
+
+    <!-- create roles with injected passwords -->
+    <changeSet  id="master-changelog-1.0_002" author="wouter@degeus.io">
+        <comment>Create user 'app_mgr'.</comment>
+        <sql>
+            CREATE ROLE app_mgr WITH PASSWORD '${MASTER_APP_MGR_PASSWORD}' LOGIN;
+        </sql>
+    </changeSet>
+    <changeSet  id="master-changelog-1.0_003" author="wouter@degeus.io">
+        <comment>Grant user 'app_mgr' privileges.</comment>
+        <sql>
+            GRANT CONNECT, TEMPORARY, CREATE ON DATABASE ${DB_NAME} TO app_mgr WITH GRANT OPTION;
+        </sql>
+    </changeSet>
+    <changeSet  id="master-changelog-1.0_004" author="wouter@degeus.io">
+        <comment>Create user 'app_usr'.</comment>
+        <sql>
+            CREATE ROLE app_usr WITH PASSWORD '${MASTER_APP_USR_PASSWORD}' LOGIN;
+        </sql>
+    </changeSet>
+    <changeSet  id="master-changelog-1.0_005" author="wouter@degeus.io">
+        <comment>Grant user 'app_usr' privileges.</comment>
+        <sql>
+            GRANT CONNECT ON DATABASE ${DB_NAME} TO app_usr;
+        </sql>
+    </changeSet>
+
+    <!-- iam schema (identity and access)-->
+    <changeSet id="master-changelog-1.0_iam001" author="wouter@degeus.io">
+        <comment>Create the schema for Identity and Access Management (IAM).</comment>
+        <sql>
+            CREATE SCHEMA iam;
+        </sql>
+    </changeSet>
+    <changeSet id="master-changelog-1.0_iam003" author="wouter@degeus.io" >
+        <comment>Allow user app_mgr to see tables in the 'iam' schema.</comment>
+        <sql>
+            GRANT ALL PRIVILEGES ON SCHEMA iam TO app_mgr;
+        </sql>
+    </changeSet>
+    <changeSet id="master-changelog-1.0_iam004" author="wouter@degeus.io">
+        <comment>Allow user app_usr to e.g. see tables in the 'iam' schema.</comment>
+        <sql>
+            GRANT USAGE ON SCHEMA iam TO app_usr;
+        </sql>
+    </changeSet>
+
+
+    <!-- rcp schema (recipes)-->
+    <changeSet id="master-changelog-1.0_rcp001" author="wouter@degeus.io">
+        <comment>Create the schema for recipes (RCP).</comment>
+        <sql>
+            CREATE SCHEMA rcp;
+        </sql>
+    </changeSet>
+    <changeSet id="master-changelog-1.0_rcp002" author="wouter@degeus.io" >
+        <comment>Allow user app_mgr to see tables in the 'rcp' schema.</comment>
+        <sql>
+            GRANT ALL PRIVILEGES ON SCHEMA rcp TO app_mgr;
+        </sql>
+    </changeSet>
+    <changeSet id="master-changelog-1.0_rcp003" author="wouter@degeus.io">
+        <comment>Allow user app_usr to see tables in the 'rcp' schema.</comment>
+        <sql>
+            GRANT USAGE ON SCHEMA rcp TO app_usr;
+        </sql>
+    </changeSet>
+    <!-- /rcp (conversion & templates )-->
+
+</databaseChangeLog>
+
