@@ -22,7 +22,13 @@ Feature: Test scenarios for the app.
     And header Content-Type = 'application/json'
     And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
     When method POST
+    Then status 201
+    * def recipeUrl = responseHeaders['Location'][0]
+
+    * url recipeUrl
+    * print 'Getting recipe just created'
+    And header Accept = 'application/json, text/plain, */*'
+    When method GET
     Then status 200
-
-
+    * match response == {"id":"#string","title":"Fresh Basil Pesto"}
 
