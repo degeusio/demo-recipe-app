@@ -10,9 +10,10 @@
         <sql>
             CREATE TABLE rcp.recipe (
                 id                         UUID CONSTRAINT pk_rid PRIMARY KEY NOT NULL,
-                title                      VARCHAR(64) NOT NULL,
+                title                      VARCHAR(128) NOT NULL,
                 vegetarian                 BOOLEAN NOT NULL,
                 number_of_persons          INTEGER NOT NULL,
+                instructions               VARCHAR(2000) NOT NULL,
                 created_timestamp          TIMESTAMP NOT NULL,
                 last_modified_timestamp    TIMESTAMP NOT NULL
             );
@@ -30,7 +31,7 @@
         <sql>
             CREATE TABLE rcp.recipes_ingredients (
                 recipe_id                  UUID NOT NULL,
-                ingredient                 VARCHAR(64) NOT NULL,
+                ingredient                 VARCHAR(128) NOT NULL,
                 FOREIGN KEY (recipe_id) REFERENCES rcp.recipe (id) ON DELETE CASCADE
             );
         </sql>

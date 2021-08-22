@@ -27,6 +27,20 @@ Using simple base64 authentication for now. We can think of other forms of login
     - persistence (repository) layer: must always participate in an existing transactional boundary.
   this approach is implemented using Spring Frameworks declarative @Transactional support.
 
+- REST API design 
+  - simple design for Create, Read, Update and Delete (CRUD) operations for Recipe
+  - operations logically follow the HTTP verb accordingly (i.e. POST, GET, PUT and DELETE respectively)  
+  - further enhancements and improvements, a good resource is e.g. the [Zalando API guidelines](http://zalando.github.io/restful-api-guidelines/)
+  - Vulnerable operations modifying state (CUD) require authentication and authorization, implemented using Spring Security.
+  - In principle, an administrator is trusted to not inject exploits as user input but the API can be further shielded of that to cleanse administrator user input before e.g. persisting in the datastore.
+  - only full object updates are currently implemented. That is, all values passed to the PUT operation are modified. Later enhancements could allow for partial updates, by introducing e.g. a PATCH REST API method. See also the Zalando API guidelines.
+
+- Security
+  - Sensitive operations require authentication (AuthN) and authorization (AuthZ). 
+  - Currently, the app is using a statically added user who has a role of Administrator and a password of 'password'. The password is not stored plain text, but hashed and salted via BCrypt.
+  - The user table database is integrated via the 'UserDetails' contract with AuthenticationProvider within the Spring (Security) Framework
+  - Authorization is provided through Spring Security's global method security framework, e.g. by using the @PreAuthorize("hasRole('ADMINISTRATOR')") annotation. This is implemented in the service layer of the app, to e.g. allow for further enhancements and integrations with other systems (e.g. messaging systems or reporting systems) or federated authorization solutions relying on OAuth2/OIDC.
+  
 - database
   - least privilege principle is applied through the creation of a specific, low privilege app user
   - in this example, the user that the app uses has no privileges to modify the IAM tables. Even if the app would become compromised, changing that data is prevented. E.g. the 'app_usr' has only select privileges on the iam.* table objects. 

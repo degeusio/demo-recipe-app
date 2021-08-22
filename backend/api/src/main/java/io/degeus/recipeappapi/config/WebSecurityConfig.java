@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .httpBasic()
                 .and()
             .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/recipes")
+                .antMatchers(HttpMethod.GET, "/recipes/**")
                 .permitAll()
                 .and()
             .authorizeRequests()
