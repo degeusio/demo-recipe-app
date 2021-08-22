@@ -75,10 +75,10 @@ Feature: Test scenarios for the app.
     When method DELETE
     Then status 200
 
-    #* print 'After deletion, API should return Not Found (404) for the deleted recipe'
-    #Given url recipeUrl
-    #When method GET
-    #Then status 404
+    * print 'After deletion, API should return Not Found (404) for the deleted recipe'
+    Given url recipeUrl
+    When method GET
+    Then status 404
 
 
 
