@@ -16,7 +16,7 @@ Feature: Test scenarios for the app.
     When method POST
     Then status 401
 
-    Scenario: Scenario-03: When posting a new recipe for a user with administrator privileges, we should be able to retrieve it back
+    Scenario: Scenario-03: When posting a new recipe for a user with administrator privileges, we should be able to retrieve it back for any user
     Given path '/recipes'
     And request read("classpath:testdata/recipe.json")
     And header Content-Type = 'application/json'
@@ -33,4 +33,39 @@ Feature: Test scenarios for the app.
     # testing only on snippet of response for now
     * match response.id == "#string"
     * match response.title == "Fresh Basil Pesto"
+
+  Scenario: Scenario-04: A newly created recipe, an administrator must be able to update (add an ingredient) and delete it
+    Given path '/recipes'
+    And request read("classpath:testdata/cud_recipe.json")
+    And header Content-Type = 'application/json'
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method POST
+    Then status 201
+    * def recipeUrl = responseHeaders['Location'][0]
+
+    * print 'Getting and verifying the recipe created'
+    Given url recipeUrl
+    * print 'Getting recipe just created'
+    And header Accept = 'application/json, text/plain, */*'
+    When method GET
+    Then status 200
+    # testing only on snippet of response for now
+    * match response.id == "#string"
+    * match response.title == "Deleteme"
+    * match response.ingredients == '#[7] #string'
+
+    * print 'Updating the recipe just created with other payload'
+    Given url recipeUrl
+    And def recipe_id = response.id
+    And request read("classpath:testdata/cud_recipe_update.json")
+    And header Content-Type = 'application/json'
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method PUT
+    Then status 200
+
+
+
+
+
+
 
