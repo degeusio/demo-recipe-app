@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="rcp-changelog-001" author="wouter@degeus.io">
+        <comment>Create table recipe</comment>
+        <sql>
+            CREATE TABLE rcp.recipe (
+                id                         UUID CONSTRAINT pk_rid PRIMARY KEY NOT NULL,
+                title                      VARCHAR(64) NOT NULL,
+                vegetarian                 BOOLEAN NOT NULL,
+                number_of_persons          INTEGER NOT NULL,
+                created_timestamp          TIMESTAMP NOT NULL,
+                last_modified_timestamp    TIMESTAMP NOT NULL
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="rcp-changelog-1.0_002" author="wouter@degeus.io">
+        <comment>Grant privileges to 'app_usr' user to rcp.recipe,
+            see https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql</comment>
+        <sql>
+            GRANT SELECT, INSERT, UPDATE, DELETE ON rcp.recipe TO app_usr;
+        </sql>
+    </changeSet>
+    <changeSet id="rcp-changelog-003" author="wouter@degeus.io">
+        <comment>Create table 'recipes_ingredients'</comment>
+        <sql>
+            CREATE TABLE rcp.recipes_ingredients (
+                recipe_id                  UUID NOT NULL,
+                ingredient                 VARCHAR(64) NOT NULL,
+                FOREIGN KEY (recipe_id) REFERENCES rcp.recipe (id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="rcp-changelog-1.0_004" author="wouter@degeus.io">
+        <comment>Grant privileges to 'app_usr' user to rcp.recipes_ingredients,
+            see https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql</comment>
+        <sql>
+            GRANT SELECT, INSERT, UPDATE, DELETE ON rcp.recipes_ingredients TO app_usr;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
+

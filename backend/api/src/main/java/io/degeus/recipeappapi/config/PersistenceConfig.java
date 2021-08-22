@@ -9,6 +9,7 @@ import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -24,11 +25,14 @@ import java.util.HashMap;
 @EnableJpaRepositories(
         basePackageClasses = RecipeAppApiApplication.class,
         entityManagerFactoryRef = "appEntityManager", //explicitly named, preventing to accidentally using Spring Framework's default
-        transactionManagerRef = "appTransactionManager" //explicitly named, preventing to accidentally using Spring Framework's default
+        transactionManagerRef = PersistenceConfig.APP_TRANSACTION_MANAGER //explicitly named, preventing to accidentally using Spring Framework's default
 )
+@EnableJpaAuditing //enables a.o. capturing of Create and LastModifiedTimestamp
 @RequiredArgsConstructor
 @Slf4j
 public class PersistenceConfig {
+
+    public static final String APP_TRANSACTION_MANAGER = "appTransactionManager";
 
     private final AppProperties appProperties;
 
@@ -74,9 +78,8 @@ public class PersistenceConfig {
      * note: Default spring's transaction timeout may be indefinite, see e.g. <a href="https://stackoverflow.com/questions/46827279/transactional-timeout-default-value#:~:text=In%20Spring%20documentation%2C%20it%20is,default%20timeout%20value(%2D1)">link</a>.
      * For production, specifying a timeout out
      */
-    @Bean
+    @Bean(name = APP_TRANSACTION_MANAGER)
     public PlatformTransactionManager appTransactionManager() {
-
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(appEntityManager().getObject());
         transactionManager.setDefaultTimeout(appProperties.getDb().getDefaultTransactionTimeoutInSeconds());

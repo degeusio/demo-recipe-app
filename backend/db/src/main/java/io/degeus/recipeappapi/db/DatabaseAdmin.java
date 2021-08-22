@@ -44,7 +44,7 @@ public class DatabaseAdmin {
         Properties databaseProperties = loadDatabaseProperties(DATABASE_PROPERTIES_FILE);
         doUpdateMasterChanges(databaseProperties);
         doUpdateSchema("iam", LIQUIBASE_CHANGELOG_IAM_LOCATION, databaseProperties);
-        //doUpdateSchema("rcp", LIQUIBASE_CHANGELOG_RCP_LOCATION, databaseProperties);
+        doUpdateSchema("rcp", LIQUIBASE_CHANGELOG_RCP_LOCATION, databaseProperties);
     }
 
     private static void doUpdateSchema(String schema, String changelogFile, Properties databaseProperties) throws LiquibaseException, SQLException  {

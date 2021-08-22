@@ -20,6 +20,12 @@
 - Authentication & Authorization
 Using simple base64 authentication for now. We can think of other forms of login later, e.g. using JWTs obtained from Authorization Service using OAuth2/OIDC.
   
+- transaction management
+  given we operate on a database and the app is intended for production, we have to account for transaction management. If not, we are simply using transaction management as default provided by the framework. For this app, we use a very simple and consistent approach:
+    - web layer: no transactional boundary
+    - service layer: create or reuse an existing boundary
+    - persistence (repository) layer: must always participate in an existing transactional boundary.
+  this approach is implemented using Spring Frameworks declarative @Transactional support.
 
 - database
   - least privilege principle is applied through the creation of a specific, low privilege app user
