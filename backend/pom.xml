@@ -18,6 +18,7 @@
     <modules>
         <module>api</module>
         <module>testautomation</module>
+        <module>db</module>
     </modules>
 
 </project>

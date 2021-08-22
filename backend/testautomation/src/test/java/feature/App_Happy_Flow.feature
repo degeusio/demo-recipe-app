@@ -14,4 +14,15 @@ Feature: Test scenarios for the app.
     And request read("classpath:testdata/recipe.json")
     And header Content-Type = 'application/json'
     When method POST
-    Then status 403
+    Then status 401
+
+    Scenario: Scenario-03: When posting a new recipe for a user with administrator privileges, we should be able to retrieve it back
+    Given path '/recipes'
+    And request read("classpath:testdata/recipe.json")
+    And header Content-Type = 'application/json'
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method POST
+    Then status 200
+
+
+
