@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $(dirname $0)
 # use ./build.sh --e PROD
 while getopts e: flag
 do

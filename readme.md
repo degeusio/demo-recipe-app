@@ -1,10 +1,25 @@
 # Recipe app
 
-# Run
+# Prerequisites
+- JDK 11 installed
+- maven installed
+- docker engine is running (e.g. 'docker ps' works)
+- internet access to obtain containers
+- to run the build scripts: Linux/Unix OS (alternatively, emulator like GitBash (not tested)) 
 
+## Build and run the app locally
+This script builds and runs the app, consisting of three containers: a single page application container, a datastore container and a REST api container.
 ```shell
-
+cwd=$(pwd)
+echo "Building Single Page App (Angular) frontend container"
+$cwd/frontend/build.sh
+echo "Building recipe database container"
+$cwd/backend/db/build.sh
+echo "Building and testing Spring Boot Rest API app container"
+$cwd/backend/build.sh
+echo "Done. Visit the SPA at http://localhost:80, the api at http://localhost:8080/recipes or the database at with your (Postgres) Sql client of choice"
 ```
+
 ## Backend
 ### Starter of the project
 - Starter of backend api setup created with Spring initializr (https://start.spring.io/), including dependencies:

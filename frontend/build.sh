@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $(dirname $0)
 set -e
 # Any subsequent(*) commands which fail will cause the shell script to exit immediately
 DATE=$(date '+%Y-%m-%d')
