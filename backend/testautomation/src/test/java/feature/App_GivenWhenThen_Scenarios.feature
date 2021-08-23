@@ -80,7 +80,22 @@ Feature: Test scenarios for the app.
     When method GET
     Then status 404
 
+  Scenario: Scenario-05: An administrator must not be able to create an invalid recipe missing ingredients
+    Given path '/recipes'
+    And request read("classpath:testdata/recipe_gourmet_mushroom_risotto_bad.json")
+    And header Content-Type = 'application/json'
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method POST
+    Then status 400
+    * match response == "create.candidate.ingredients: must not be null"
 
+  Scenario: Scenario-06: An administrator must not be able to create an valid additional recipe including ingredients
+    Given path '/recipes'
+    And request read("classpath:testdata/recipe_gourmet_mushroom_risotto_good.json")
+    And header Content-Type = 'application/json'
+    And header Authorization = call read('basic-auth.js') { username: 'adminuser', password: 'password' }
+    When method POST
+    Then status 201
 
 
 

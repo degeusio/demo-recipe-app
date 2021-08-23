@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
@@ -55,6 +56,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.debug("UnsupportedOperationException. Error [{}]", ex.getMessage());
         HttpStatus mappedStatus = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(ex, null, new HttpHeaders(), mappedStatus, request);
+    }
+
+    @ExceptionHandler(value = {ConstraintViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+        log.debug("ConstraintViolationException exception occurred. Error [{}]", ex.getMessage());
+        HttpStatus mappedStatus = HttpStatus.BAD_REQUEST;
+        //we pass in the raw message here, but we could use resource bundle(s) for a nicer message.
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), mappedStatus, request);
     }
 
     @ExceptionHandler(value = {RuntimeException.class})
