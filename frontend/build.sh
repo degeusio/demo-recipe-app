@@ -5,5 +5,5 @@ DATE=$(date '+%Y-%m-%d')
 GITVERSION=$(git rev-parse --short=8 HEAD)
 VERSION="$DATE-build-$GITVERSION"
 echo $VERSION
-docker build -t recipe-app:$VERSION .
-docker tag recipe-app:$VERSION recipe:latest
+docker build -t degeus.io/recipe-app-spa:$VERSION .
+docker tag degeus.io/recipe-app-spa:$VERSION degeus.io/recipe-app-spa:latest
