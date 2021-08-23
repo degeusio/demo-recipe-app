@@ -38,8 +38,24 @@
           <td>{{ recipe.number_of_persons }}</td>
           <td>{{ recipe.created_timestamp}}</td>
           <td>{{ recipe.last_modified_timestamp}}</td>
-<!--          <td><span><a routerLink="{{ 'filings/' + df.id }}">details &raquo;</a></span></td>-->
-          <td><span><a [routerLink]="['./filings', recipe.id]">details &raquo;</a></span></td>
+          <!-- very basic way of showing instructions and ingredients -->
+          <td>
+            <p>
+              <button class="btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Details >>
+              </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                <p>ingredients:</p>
+                <ul *ngFor="let i of recipe.ingredients">
+                  <li>{{ i }}</li>
+                </ul>
+                <p>Cooking instructions</p>
+                <p>{{ recipe.instructions }}</p>
+              </div>
+            </div>
+          </td>
           <td></td>
         </tr>
       </tbody>
