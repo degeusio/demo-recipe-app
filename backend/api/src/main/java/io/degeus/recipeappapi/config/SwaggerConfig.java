@@ -44,35 +44,11 @@ public class SwaggerConfig {
             .build()
                 .ignoredParameterTypes(Principal.class, Authentication.class) //do not generate Authentication related swagger
                 .ignoredParameterTypes(User.class, UserDetails.class) //do not generate for spring's User class
-//                .securitySchemes(List.<SecurityScheme>of(basicAuthScheme())) //only basicAuth for now
-//                .securityContexts(Arrays.asList(securityContext()))
                 .useDefaultResponseMessages(false) //removes default 200, 401, 403 and 404 for GET, and 200, 201,  401, 403 and 404 for GET
                 .apiInfo(getAppInfo());
         return docket;
     }
 
-//    private SecurityScheme basicAuthScheme() {
-//        return new BasicAuth("basicAuth");
-//    }
-
-    /**
-     * ensures there is a lock icon next to operations that match these path selectors.
-     * E.g. registers Basic Auth for /oauth.* endpoint and
-     * registers bearer token for /users.*
-     * @return
-     */
-//    private SecurityContext securityContext() {
-//        //not including /api/alert.*
-//        Predicate protectedPaths = PathSelectors.regex("./recipes.*");
-//
-//        return SecurityContext.builder()
-//                .operationSelector()
-//                .forPaths(
-//                    protectedPaths
-//                )
-//                .build();
-//                //note: for adding basic auth, see rephub-iam
-//    }
 
     private ApiInfo getAppInfo() {
 
